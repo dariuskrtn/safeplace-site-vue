@@ -89,7 +89,7 @@ export default {
         return {
             name: "",
             lastName: "",
-            cameras: $store.state.camera.cameraList,
+            cameras: this.$store.state.camera.cameraList,
             isCameraPlaying: false,
             picturesRequired: 10,
 

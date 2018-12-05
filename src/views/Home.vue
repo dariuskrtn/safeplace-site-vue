@@ -69,12 +69,12 @@ export default {
     
     data () {
         return {
-            floorList: this.$store.state.floor.floorList,
-            cameraList: this.$store.state.camera.cameraList,
-            currentFloor: this.$store.state.floor.currentFloor,
+            floorList: [],
+            cameraList: [],
+            currentFloor: null,
             //when putting currentFloor.name it destroys page when currentFloor is null
-            currentFloorName:  this.currentFloor.name,
-            JustCameras : this.currentFloor.cameras
+            currentFloorName:  "",
+            JustCameras : []
         }
     },
 
@@ -97,6 +97,7 @@ export default {
 
           // does not work as expected
       getCurrentCameras(){
+        if (this.currentFloor == null) return;
         var someCameras = [];
             this.currentFloor.cameras.forEach(camera => {
               var temp = this.cameraList.find(cam => cam.guid == "95777b1b-9f98-4bad-8fff-837a7b41dc63");

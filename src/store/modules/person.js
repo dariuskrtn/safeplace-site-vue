@@ -1,7 +1,7 @@
 import * as Api from '@/api/api';
 import * as config from '@/api/config';
 
-export default person = {
+export default {
     namespaced: true,
     state: { 
       personList: []

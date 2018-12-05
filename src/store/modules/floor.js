@@ -1,7 +1,7 @@
-import * as Api from '@/api/api';
+import * as Api from '@/api/api.js';
 import * as config from '@/api/config';
 
-export default floor = {
+export default {
     namespaced: true,
     state: { 
         currentFloor: null,
