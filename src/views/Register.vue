@@ -78,12 +78,11 @@
     </div>
 </template>
 
-<script lang="js">
+<script>
 // import Vue from 'vue';
 // import Component from 'vue-class-component';
 // import Camera from '@/models/Camera';
 
-@Component({})
 export default {
 
     data (){
@@ -99,18 +98,18 @@ export default {
             canvas: null,
             captures: []
         }
-    }
+    },
 
     mounted() {
         this.video = this.$refs.video;
-    }
+    },
 
     methods: {
         toggleCamera() {
             if (this.isCameraPlaying) this.stopCamera();
             else this.startCamera();
             this.isCameraPlaying = !this.isCameraPlaying;
-        }
+        },
         startCamera() {
             if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
@@ -119,18 +118,18 @@ export default {
                     this.stream = stream;
                 });
             }
-        }
+        },
         stopCamera() {
             if (this.stream != null && this.stream.active) {
                 this.stream.getVideoTracks()[0].stop();
             }
-        }
+        },
 
         capture() {
             this.canvas = this.$refs.canvas;
             var context = this.canvas.getContext("2d").drawImage(this.video, 0, 0, 640, 480);
             this.captures.push(this.canvas.toDataURL("image/png"));
-        }
+        },
 
         savePerson() {
             //TODO: this

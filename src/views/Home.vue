@@ -59,7 +59,7 @@
     </div>
 </template>
 
-<script lang="ts">
+<script>
 // import { Component, Vue } from 'vue-property-decorator';
 // import store from '@/store/store';
 // import Camera from '@/models/Camera';
@@ -69,12 +69,12 @@ export default {
     
     data () {
         return {
-            floorList: this.$store.state.floor.floorList;
-            cameraList: this.$store.state.camera.cameraList;
-            currentFloor: this.$store.state.floor.currentFloor;
+            floorList: this.$store.state.floor.floorList,
+            cameraList: this.$store.state.camera.cameraList,
+            currentFloor: this.$store.state.floor.currentFloor,
             //when putting currentFloor.name it destroys page when currentFloor is null
-            currentFloorName:  this.currentFloor.name;
-            JustCameras : this.currentFloor.cameras;
+            currentFloorName:  this.currentFloor.name,
+            JustCameras : this.currentFloor.cameras
         }
     },
 
@@ -107,7 +107,7 @@ export default {
             return someCameras;
         },
 
-      getCamera(guid : string){
+      getCamera(guid){
         return this.cameraList.find(cam => cam.guid == guid);
       } 
     }
