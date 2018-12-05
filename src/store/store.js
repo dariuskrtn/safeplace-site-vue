@@ -8,17 +8,19 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-
+    dataLoaded: false
   },
   mutations: {
-
+    setDataLoaded() {
+      state.dataLoaded = true;
+    }
   },
   actions: {
 
   },
   modules: {
-    floor: floor.app,
-    camera: camera.app,
-    person: person.app
+    floor: floor,
+    camera: camera,
+    person: person
   }
 })
