@@ -12,5 +12,10 @@ export default new Vuex.Store({
   },
   actions: {
 
+  },
+  modules: {
+    floor: Floor.app,
+    camera: Camera.app,
+    person: Person.app
   }
 })
