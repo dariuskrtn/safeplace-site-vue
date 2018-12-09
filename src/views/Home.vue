@@ -8,11 +8,12 @@
                 <div>
                     <h4> {{currentFloorName}} </h4>
                 </div>
-                <div>
+                 <div>
                    <ul id="v-for-object" class="demo">
-                        <li v-for="value in getCamera('1c5167cd-95c3-4ad9-9d6d-5f3067b85566')">
+                        <!-- Doesn't wotk vitha fake cameras array -->
+                        <!-- <li v-for="value in getCamera('1c5167cd-95c3-4ad9-9d6d-5f3067b85566')">
                             {{ value }}
-                        </li>
+                        </li> -->
                     </ul>
                 </div>
                 <div>
@@ -23,16 +24,28 @@
                     </ul>
                 </div>
                 <div>
-                    <img <!--src="http://localhost:54507/api/images/2d0c3a05-5b96-49d5-b20e-4b3a9de89357" --> alt = "Failed to upload floor image">
-                </div>
+                    <div class="backgroundImage" :style="{'background-image': 'url(' + require('../Sketch.png') + ')'}">
+                   <!-- <div style = {background-image: url("@../image2.png"); width:400px; height:600px; position: relative;}> -->
+                        <!-- <img src="../dot.png" style = "position: relative; top:0px; left: -100px; width: 15px; height: 20px;"> -->
+                        <!-- <img v-for="camera in cameraList" :src="camera.name" :alt="Camera can not be shown" :style = "position: relative; top: " + camera.positionY +"px; left: " + camera.positionX + "px; width: 15px; height: 20px;"> -->
+                        <img v-for="camera in cameraList" src="../dot.png" :alt="camera.name"/>
+                        <!-- <img src="../dot.png" alt="camera.name"> -->
+                        </div>
+
+                   </div>
 
 
             </div>
             <div class="navigation">
                 navigation
                 <div class="navigation-buttons">
-                    <button v-on:click="ShowUpperFloor()"> Previous floor </button>
-                    <button v-on:click="ShowLowerFloor()"> Next floor </button>
+                    <div class="col-md-12">
+                    <button class="btn btn-default" v-on:click="ShowUpperFloor()"> Previous floor </button>
+                    </div>
+                    <br/>
+                    <div class="col-md-12">
+                    <button class="btn btn-default" v-on:click="ShowLowerFloor()"> Next floor </button>
+                    </div>
                 </div>
                 <hr/>
                 <div>
@@ -69,47 +82,74 @@ export default {
     
     data () {
         return {
-            floorList: [],
-            cameraList: [],
+            floorList: this.$store.state.floor.floorList,
+            cameraList: [
+                    {name: '../dot.png',
+                    positionX: 100,
+                    positionY: 100},
+                    {name: '../dot.png',
+                    positionX: 200,
+                    positionY: 200},
+                    {name: '../dot.png',
+                    positionX: 100,
+                    positionY: 100}
+            ],
             currentFloor: null,
             //when putting currentFloor.name it destroys page when currentFloor is null
-            currentFloorName:  "",
+            //currentFloorName:  "",
             JustCameras : []
         }
     },
+    mounted (){
+        this.$store.dispatch('floor/load')
+    },
 
-    watch: {
-
+    computed: {
+        currentFloorName: function(){
+            if (this.currentFloor == null)
+                return;
+            return this.currentFloor.name
+        }
     },
 
     methods: {
+        getCurrentFloor: function(){
+            if (null == this.$store.state.floor.currentFloor)
+                return;
+            this.currentFloor = this.$store.state.floor.currentFloor;
+            this.currentFloorName = currentFloor.name;
+            return this.currentFloor;
+        },
        ShowUpperFloor: function(){
         var index = this.$store.state.floor.floorList.indexOf(this.currentFloor);
         if (index > 0)
         this.currentFloor = this.$store.state.floor.currentFloor = this.$store.state.floor.floorList[index-1]; 
       },
    
-      ShowLowerFloor(){
+      ShowLowerFloor: function (){
         var index = this.$store.state.floor.floorList.indexOf(this.currentFloor);
         if (index < this.$store.state.floor.floorList.length-1)
         this.currentFloor = this.$store.state.floor.currentFloor = this.$store.state.floor.floorList[index+1]; 
       },
 
           // does not work as expected
-      getCurrentCameras(){
+      getCurrentCameras: function (){
         if (this.currentFloor == null) return;
-        var someCameras = [];
             this.currentFloor.cameras.forEach(camera => {
-              var temp = this.cameraList.find(cam => cam.guid == "95777b1b-9f98-4bad-8fff-837a7b41dc63");
+              var tempCam = this.cameraList.find(cam => cam.guid == camera);
               //[Tomas] a bit of workaround, can not find better solution - find can return undefine, and camera can not be ondefined (can;t null as well)
-              camera = temp? temp : camera;
-              someCameras.push(camera);
+              //camera = tempCam? tempCam : camera;
+              if (tempCam != undefined)
+                this.cameraList.push(tempCam);
             })
-            return someCameras;
         },
 
-      getCamera(guid){
-        return this.cameraList.find(cam => cam.guid == guid);
+      getCamera: function(guid){
+        if (this.cameraList.length == 0)
+          return
+        var camera = this.cameraList.find(cam => cam.guid == guid);
+        if (camera != undefined)
+        return camera;
       } 
     }
 
@@ -121,6 +161,15 @@ export default {
 
 
 <style>
+    .backgroundImage{
+        width: 1024px;
+        height: 720px;
+        background-size: 100% 100%;
+        border-radius: 10px;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        position: relative;
+    }
     .navigation-buttons button {
     display: block;
     width: 60%;
