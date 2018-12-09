@@ -11,12 +11,11 @@ export default new Vuex.Store({
     dataLoaded: false
   },
   mutations: {
-    setDataLoaded() {
-      state.dataLoaded = true;
-    }
   },
   actions: {
-
+    setDataLoaded(state) {
+      state.dataLoaded = true;
+    }
   },
   modules: {
     floor: floor,

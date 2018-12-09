@@ -8,20 +8,26 @@ export default {
         floorList: []
     },
     mutations: {
-      add(floor) {
+      add(state, floor) {
         state.floorList.push(floor);
       },
+      setCurrentFloor(state, floor) {
+        state.currentFloor = floor;
+      }
+    },
+    actions: {
       save(floor) {
-        return Api().post(config.default.api.saveFloor, floor);
+        return Api.default.Axios.post(config.default.api.saveFloor, floor);
       },
-      load() {
-        Api().get(config.default.api.getFloors).then(resp => {
-            var data = JSON.parse(resp.data);
+      load({commit, state}) {
+        Api.default.Axios.get(config.default.api.getFloors).then(resp => {
+            var data = resp.data;
+            
             data.forEach(floor => {
-                state.floorList.push(floor);
+              commit("add", floor);
             });
             
-            if (state.floorList.length > 0) state.currentFloor = state.floorList[0];
+            if (state.floorList.length > 0) commit("add", state.floorList[0]);
         })
       }
     }

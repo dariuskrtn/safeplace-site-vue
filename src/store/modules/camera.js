@@ -7,17 +7,19 @@ export default {
       cameraList: []
     },
     mutations: {
-      add(camera) {
+      add(state, camera) {
         state.cameraList.push(camera);
-      },
+      }
+    },
+    actions: {
       save(camera) {
-        return Api().post(config.default.api.saveCamera, camera);
+        return Api.default.Axios.post(config.default.api.saveCamera, camera);
       },
-      load() {
-        Api().get(config.default.api.getCameras).then(resp => {
-          var data = JSON.parse(resp.data);
+      load({commit}) {
+        Api.default.Axios.get(config.default.api.getCameras).then(resp => {
+          var data = resp.data;
           data.forEach(camera => {
-              state.cameraList.push(camera);
+              commit("add", camera);
           });
       })
       }

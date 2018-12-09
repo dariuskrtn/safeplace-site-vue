@@ -7,20 +7,22 @@ export default {
       personList: []
     },
     mutations: {
-      add(person) {
+      add(state, person) {
         state.personList.push(person);
       },
+    },
+    actions: {
       save(person) {
-        return Api().post(config.default.api.savePersonInfo, person);
+        return Api.default.Axios.post(config.default.api.savePersonInfo, person);
       },
       saveImages(guid, images) {
-        return Api().post(config.default.api.savePersonImage+"/"+guid, images);
+        return Api.default.Axios.post(config.default.api.savePersonImage+"/"+guid, images);
       },
-      load() {
-        Api().get(config.default.api.getPeople).then(resp => {
-            var data = JSON.parse(resp.data);
+      load({commit}) {
+        Api.default.Axios.get(config.default.api.getPeople).then(resp => {
+            var data = resp.data;
             data.forEach(person => {
-                state.personList.push(person);
+                commit("add", person);
             });
         })
       }
