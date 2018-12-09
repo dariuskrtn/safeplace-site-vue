@@ -10,10 +10,10 @@ new Vue({
   store,
   render: h => h(App),
   created: () => {
-    store.commit("floor/load").then(
-      () => store.commit("camera/load").then(
-        () => store.commit("person/load").then(
-          () => store.commit("setDataLoaded")
+    store.dispatch("floor/load").then(
+      () => store.dispatch("camera/load").then(
+        () => store.dispatch("person/load").then(
+          () => store.dispatch("setDataLoaded")
         )
       )
     )

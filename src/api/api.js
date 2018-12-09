@@ -1,8 +1,8 @@
 import axios from 'axios';
 import * as config from './config';
 
-export default function Api() {
-    return axios.create({
+export default {
+    Axios: axios.create({
         baseURL: config.default.baseUrl,
         withCredentials: false,
         headers: {
@@ -10,4 +10,4 @@ export default function Api() {
             'Content-Type': 'application/json'
         },
     })
-};
+}
