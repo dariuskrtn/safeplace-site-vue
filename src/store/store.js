@@ -13,8 +13,8 @@ export default new Vuex.Store({
   mutations: {
   },
   actions: {
-    setDataLoaded() {
-      this.state.dataLoaded = true;
+    setDataLoaded(state) {
+      state.dataLoaded = true;
     }
   },
   modules: {
