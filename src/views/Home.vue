@@ -18,17 +18,14 @@
                 </div>
                 <div>
                    <ul class="demo">
-                        <li v-for="value in getCurrentCameras()">
+                        <li v-for="value in getCurrentCameras()" v-bind:key="value.guid"  >
                             {{ value }}
                         </li>
                     </ul>
                 </div>
                 <div>
-                    <div class="backgroundImage" :style="{'background-image': 'url(' + require('../Sketch.png') + ')'}">
-                   <!-- <div style = {background-image: url("@../image2.png"); width:400px; height:600px; position: relative;}> -->
-                        <!-- <img src="../dot.png" style = "position: relative; top:0px; left: -100px; width: 15px; height: 20px;"> -->
-                        <!-- <img v-for="camera in cameraList" :src="camera.name" :alt="Camera can not be shown" :style = "position: relative; top: " + camera.positionY +"px; left: " + camera.positionX + "px; width: 15px; height: 20px;"> -->
-                        <img v-for="camera in cameraList" src="../dot.png" :alt="camera.name"/>
+                    <div class="backgroundImage" :style="{'background-image': 'url(' + require('../Sketch.png') + ')', 'position': 'relative'}">
+                        <img class="cam-pointer"  v-for="camera in cameraList" :src="camera.name" :alt="camera.name" :style="{'left': camera.positionX+'px',  'top': camera.positionY+'px', 'width':'15px', 'height': '30px' }"/>
                         <!-- <img src="../dot.png" alt="camera.name"> -->
                         </div>
 
@@ -61,7 +58,7 @@
                     <li v-for="person in spottedPeople" :key="person.guid">
                       
                        {{ person.name }} {{person.lastName}}
-                       
+
                     </li>
                   </ul>
                 </div>
@@ -84,14 +81,14 @@ export default {
         return {
             floorList: this.$store.state.floor.floorList,
             cameraList: [
-                    {name: '../dot.png',
+                    {name: require('../dot.png'),
                     positionX: 100,
                     positionY: 100},
-                    {name: '../dot.png',
+                    {name: require('../dot.png'),
                     positionX: 200,
                     positionY: 200},
-                    {name: '../dot.png',
-                    positionX: 100,
+                    {name: require('../dot.png'),
+                    positionX: 400,
                     positionY: 100}
             ],
             currentFloor: null,
@@ -166,9 +163,7 @@ export default {
         height: 720px;
         background-size: 100% 100%;
         border-radius: 10px;
-        -webkit-border-radius: 10px;
-        -moz-border-radius: 10px;
-        position: relative;
+        position: absolute;
     }
     .navigation-buttons button {
     display: block;
@@ -177,6 +172,10 @@ export default {
     margin-right: auto;
 
     }
+    .cam-pointer {
+        position: absolute;
+    }
+
     .window {
         display: flex;
         flex: 1 1 0%;
