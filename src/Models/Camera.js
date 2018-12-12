@@ -4,6 +4,7 @@ export default function Camera () {
     this.name = "";
     this.positionX = "";
     this.positionY = "";
-    //Something like enum shlould be better
+    //Something like enum would be better
     this.status = "Offline";
+    this.identifiedPeople = [];
 }
