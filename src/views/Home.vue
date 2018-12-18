@@ -2,9 +2,6 @@
     <div id="home">
         <div class="window">
             <div class="floor">
-              
-                floor
-
                 <div>
                     <h4> {{currentFloorName}} </h4>
                 </div>
@@ -25,9 +22,10 @@
                 </div>
                 <div>
                     <div class="backgroundImage" :style="{'background-image': 'url(' + require('../Sketch.png') + ')', 'position': 'relative'}">
-                        <img class="cam-pointer"  v-for="camera in currentCameras" :key="camera.guid" src="../dot.png" :alt="camera.name" v-on:mouseover="showIdentifiedPeople(camera)"
-                            v-on:mouseleave="removeIdentifiedPeople()" :style="{'left': camera.positionX+'px',  'top': camera.positionY+'px', 'width':'15px', 'height': '30px' }"/>
+                        <img class="cam-pointer"  v-for="camera in currentCameras" :key="camera.guid" :src="getCameraImage(camera)" :alt="camera.name" v-on:mouseover="showIdentifiedPeople(camera)"
+                            v-on:mouseleave="removeIdentifiedPeople()" :style="{'left': camera.positionX+'px',  'top': camera.positionY+'px', 'width':'15px', 'height': '15px' }"/>
                         <!-- <img src="../dot.png" alt="camera.name"> -->
+                        <!-- :src="require('@/assets/' + camera.status +'.png')" -->
                         </div>
 
                    </div>
@@ -35,7 +33,6 @@
 
             </div>
             <div class="navigation">
-                navigation
                 <div class="navigation-buttons">
                     <div class="col-md-12">
                     <button class="btn btn-default" v-on:click="showPreviousFloor()"> Previous floor </button>
@@ -82,6 +79,7 @@ export default {
         return {
             _currentFloor: null,
             spottedPeople: [],
+            imageSrc: require('@/assets/dot.png'),
         }
     },
 
@@ -92,23 +90,18 @@ export default {
     computed: {
         currentFloor: {
             get: function () {
-                
-                if (null != this._currentFloor ){
+                 if (null != this.$store.state.floor.currentFloor){
+                    this._currentFloor = this.$store.state.floor.currentFloor;
                     return this._currentFloor;
                 }
-                if (null != this.$store.state.floor.currentFloor){
-                    this._currentFloor = this.$store.state.floor.currentFloor; 
-                    return this._currentFloor;
-                }
-                if (0 < this.floorList.length){
-                    this._currentFloor = this.floorList[0];   
+                else if (0 < this.$store.state.floor.floorList.length){
+                    this._currentFloor = this.$store.state.floor.floorList[0];
                     return this._currentFloor;
                 }
             },
-            set: function (newValue) {
-                this._currentFloor = newValue;
-
-            }
+            set: function (newValue) {               
+                this.$store.commit("floor/setCurrentFloor", newValue);
+            } 
         },
 
         floorList () {
@@ -126,6 +119,7 @@ export default {
             var arr = [];
             if (this.currentFloor == null) 
                 return;
+
             this.currentFloor.cameras.forEach(camera => {
                 var tempCam = this.cameraList.find(cam => cam.guid === camera);
               if (tempCam != undefined)
@@ -186,6 +180,10 @@ export default {
         removeIdentifiedPeople(){
             while(this.spottedPeople.length > 0)
                 this.spottedPeople.pop();
+        },
+        getCameraImage: function(camera){
+            if (camera != null || camera != undefined)
+            return require('@/assets/'+camera.status+'.png');
         }
     }
 }

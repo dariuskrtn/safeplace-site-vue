@@ -8,6 +8,7 @@ export default {
     },
     mutations: {
       add(state, camera) {
+        camera.status = 'Offline';
         state.cameraList.push(camera);
       }
     },
