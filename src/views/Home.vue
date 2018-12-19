@@ -65,9 +65,9 @@
                   </ul>
                 </div>
                 <br/>
-                 <div class="col-md-12">
+                 <!-- <div class="col-md-12">
                     <button class="btn btn-default" v-on:click="loadImage()"> load image </button>
-                    </div>
+                    </div> -->
             </div>
               
 
@@ -114,12 +114,22 @@ export default {
         },
 
         floorImage () {
-            if (this.currentFloor == null || this.currentFloor == undefined)
-                return;
-            if (this.currentFloor.base64Image == "" || this.currentFloor.base64Image == null || this.currentFloor.base64Image == undefined)
+            
+
+              if (this.currentFloor == null || this.currentFloor == undefined)
+                 return;
+            if (this.currentFloor.imagePath == null || this.currentFloor.imagePath == undefined || this.currentFloor.imagePath.endsWith(".png") || this.currentFloor.imagePath.endsWith(".jpg"))
                 return require('@/assets/Floor2.png');
-            else
-                return this.currentFloor.base64Image;
+            else return 'http://localhost:54507/api/images/'+this.currentFloor.imagePath;
+            // else
+            //     return this.currentFloor.base64Image;
+
+            //  if (this.currentFloor == null || this.currentFloor == undefined)
+            //     return;
+            // if (this.currentFloor.base64Image == "" || this.currentFloor.base64Image == null || this.currentFloor.base64Image == undefined)
+            //     return require('@/assets/Floor2.png');
+            // else
+            //     return this.currentFloor.base64Image;
         },
 
         floorList () {
@@ -192,29 +202,30 @@ export default {
         },
         setCurrentFloor: function(newFloor){
             this.currentFloor = newFloor;
-        },
-        loadImage: function(){
-            if (this.currentFloor == null)
-                return;
-                
-            if (this.currentFloor.isImageLoaded){
-                alert("Image is already loaded or can not be loaded");
-                return;
-            }
-
-            if (this.currentFloor.imagePath.endsWith(".png") || this.currentFloor.imagePath.endsWith(".jpg")){
-                alert("imagePath is saved, not a guid!")
-                return;
-            }
-
-            this.currentFloor.isImageLoaded = true;
-            var floorImage = this.$store.dispatch("floor/loadImage", this.currentFloor.imagePath).then(floorImage => {
-            this.currentFloor.base64Image = 'data:image/jpeg;base64,' + this.$store.state.floor.image;
-            //this.currentFloor.base64Image = floorImage;
-            console.log(this.this.currentFloor.base64Image);
-            });
-       
         }
+        // Unused, things was done harder way
+        // loadImage: function(){
+        //     if (this.currentFloor == null)
+        //         return;
+                
+        //     if (this.currentFloor.isImageLoaded){
+        //         alert("Image is already loaded or can not be loaded");
+        //         return;
+        //     }
+
+        //     if (this.currentFloor.imagePath.endsWith(".png") || this.currentFloor.imagePath.endsWith(".jpg")){
+        //         alert("imagePath is saved, not a guid!")
+        //         return;
+        //     }
+
+        //     this.currentFloor.isImageLoaded = true;
+        //     var floorImage = this.$store.dispatch("floor/loadImage", this.currentFloor.imagePath).then(floorImage => {
+        //     this.currentFloor.base64Image = 'data:image/jpeg;base64,' + this.$store.state.floor.image;
+        //     //this.currentFloor.base64Image = floorImage;
+        //     console.log(this.this.currentFloor.base64Image);
+        //     });
+       
+        // }
 
     }
 }
