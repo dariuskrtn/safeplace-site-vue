@@ -13,20 +13,23 @@
                         </li> -->
                     </ul>
                 </div>
-                <div>
+                <!-- <div>
                    <ul class="demo">
                         <li v-for="value in currentFloor" v-bind:key="value.guid"  >
                             {{ value }}
                         </li>
                     </ul>
-                </div>
+                </div> -->
                 <div>
-                    <div class="backgroundImage" :style="{'background-image': 'url(' + require('../Sketch.png') + ')', 'position': 'relative'}">
+                    <!-- <div class="backgroundImage" :style="{'background-image': 'url(' + require('../Sketch.png') + ')', 'position': 'relative'}">
                         <img class="cam-pointer"  v-for="camera in currentCameras" :key="camera.guid" :src="getCameraImage(camera)" :alt="camera.name" v-on:mouseover="showIdentifiedPeople(camera)"
                             v-on:mouseleave="removeIdentifiedPeople()" :style="{'left': camera.positionX+'px',  'top': camera.positionY+'px', 'width':'15px', 'height': '15px' }"/>
-                        <!-- <img src="../dot.png" alt="camera.name"> -->
-                        <!-- :src="require('@/assets/' + camera.status +'.png')" -->
-                        </div>
+                    </div> -->
+                    <div class="backgroundImage" :style="{'background-image': 'url('+floorImage+')' , 'position': 'relative'}">
+                        <img class="cam-pointer"  v-for="camera in currentCameras" :key="camera.guid" :src="getCameraImage(camera)" :alt="camera.name" v-on:mouseover="showIdentifiedPeople(camera)"
+                            v-on:mouseleave="removeIdentifiedPeople()" :style="{'left': camera.positionX+'px',  'top': camera.positionY+'px', 'width':'15px', 'height': '15px' }"/>
+                    </div>
+                    
 
                    </div>
 
@@ -41,10 +44,11 @@
                     <div class="col-md-12">
                     <button class="btn btn-default" v-on:click="showNextFloor()"> Next floor </button>
                     </div>
+                    
                 </div>
                 <hr/>
                 <div>
-                    <li v-for="floor in floorList" :key="floor.guid">
+                    <li v-for="floor in floorList" :key="floor.guid" v-on:click="setCurrentFloor(floor)">
                        {{ floor.name }}
                     </li>
                 </div>
@@ -60,6 +64,10 @@
                     </li>
                   </ul>
                 </div>
+                <br/>
+                 <div class="col-md-12">
+                    <button class="btn btn-default" v-on:click="loadImage()"> load image </button>
+                    </div>
             </div>
               
 
@@ -79,7 +87,8 @@ export default {
         return {
             _currentFloor: null,
             spottedPeople: [],
-            imageSrc: require('@/assets/dot.png'),
+            //floorImage: require('../Sketch.png'),
+            base64txt: '123',
         }
     },
 
@@ -102,6 +111,15 @@ export default {
             set: function (newValue) {               
                 this.$store.commit("floor/setCurrentFloor", newValue);
             } 
+        },
+
+        floorImage () {
+            if (this.currentFloor == null || this.currentFloor == undefined)
+                return;
+            if (this.currentFloor.base64Image == "" || this.currentFloor.base64Image == null || this.currentFloor.base64Image == undefined)
+                return require('@/assets/Floor2.png');
+            else
+                return this.currentFloor.base64Image;
         },
 
         floorList () {
@@ -137,26 +155,13 @@ export default {
 
     methods: {
 
-        // setCurrentFloor: function (){
-        //     if (null != this.$store.state.floor.currentFloor)
-        //         this.currentFloor = this.$store.state.floor.currentFloor;
-        //     if (this.floorList.length > 0)
-        //         this.currentFloor = this.floorList[0];
-        // },
-
         showPreviousFloor: function(){
-            // var index = this.$store.state.floor.floorList.indexOf(this.currentFloor);
-            // if (index > 0)
-            // this.currentFloor = this.$store.state.floor.currentFloor = this.$store.state.floor.floorList[index-1]; 
             var index = this.floorList.indexOf(this.currentFloor);
                 if (index > 0)
             this.currentFloor = this.floorList[index-1]; 
         },
 
         showNextFloor: function (){
-            // var index = this.$store.state.floor.floorList.indexOf(this.currentFloor);
-            // if (index < this.$store.state.floor.floorList.length-1)
-            // this.currentFloor = this.$store.state.floor.currentFloor = this.$store.state.floor.floorList[index+1]; 
             var index = this.floorList.indexOf(this.currentFloor);
                 if (index < this.floorList.length-1)
             this.currentFloor = this.floorList[index+1]; 
@@ -184,7 +189,33 @@ export default {
         getCameraImage: function(camera){
             if (camera != null || camera != undefined)
             return require('@/assets/'+camera.status+'.png');
+        },
+        setCurrentFloor: function(newFloor){
+            this.currentFloor = newFloor;
+        },
+        loadImage: function(){
+            if (this.currentFloor == null)
+                return;
+                
+            if (this.currentFloor.isImageLoaded){
+                alert("Image is already loaded or can not be loaded");
+                return;
+            }
+
+            if (this.currentFloor.imagePath.endsWith(".png") || this.currentFloor.imagePath.endsWith(".jpg")){
+                alert("imagePath is saved, not a guid!")
+                return;
+            }
+
+            this.currentFloor.isImageLoaded = true;
+            var floorImage = this.$store.dispatch("floor/loadImage", this.currentFloor.imagePath).then(floorImage => {
+            this.currentFloor.base64Image = 'data:image/jpeg;base64,' + this.$store.state.floor.image;
+            //this.currentFloor.base64Image = floorImage;
+            console.log(this.this.currentFloor.base64Image);
+            });
+       
         }
+
     }
 }
 </script>

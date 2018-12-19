@@ -1,11 +1,13 @@
 import * as Api from '@/api/api.js';
 import * as config from '@/api/config';
+import axios from 'axios';
 
 export default {
     namespaced: true,
     state: { 
         currentFloor: null,
-        floorList: []
+        floorList: [],
+        image: '',
     },
     mutations: {
       add(state, floor) {
@@ -27,8 +29,20 @@ export default {
               commit("add", floor);
             });
             
-            if (state.floorList.length > 0) commit("add", state.floorList[0]);
+            // This makes floor list "endless"
+            //if (state.floorList.length > 0) commit("add", state.floorList[0]);
         })
+      },
+      loadImage({commit, state}, guid) {
+        return axios
+        .get('http://localhost:54507/api/images/'+guid, {
+          responseType: 'arraybuffer'
+        })
+        .then(response => {
+          state.image = new Buffer(response.data, 'binary').toString('base64');
+        })
+
       }
+      //http://localhost:54507/api/images/663e8a67-cbb8-4399-87ab-c7fb9d26f33d
     }
   }

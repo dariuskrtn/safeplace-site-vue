@@ -6,5 +6,7 @@ export default function Floor () {
     cameras = [];
     name = "";
     imagePath = "";
+    isImageLoaded = false;
+    base64Image = "";
 
 }

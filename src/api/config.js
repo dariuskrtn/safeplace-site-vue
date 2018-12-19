@@ -9,6 +9,8 @@ export default {
         savePersonImage: '/people/image/save',
 
         getCameras: '/cameras',
-        saveCamera: '/cameras/save'
+        saveCamera: '/cameras/save',
+
+        getImage: '/images/663e8a67-cbb8-4399-87ab-c7fb9d26f33d'
     }
 }
